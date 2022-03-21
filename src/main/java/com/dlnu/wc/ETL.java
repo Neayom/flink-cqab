@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ETL {
-    //参数1 故障点 参数2 输入 参数3输出
+    //参数1 故障点 参数2 输入
     static boolean isError = false;
     static String ErrorPoint ; //模拟故障的点
     static String ErrorTime;//故障发生的时间
@@ -23,8 +23,10 @@ public class ETL {
     static String inputPath;
     public static void main(String[] args) throws Exception {
         ParameterTool parameterTool = ParameterTool.fromArgs(args);
-        inputPath = parameterTool.get("inputPath");
-        ErrorPoint = parameterTool.get("ErrorPoint");
+       /* inputPath = parameterTool.get("inputPath");
+        ErrorPoint = parameterTool.get("ErrorPoint");*/
+       inputPath = "src/main/resources/hello.txt";
+       ErrorPoint = "9";
 
         // create execution env
         ExecutionEnvironment executionEnvironment = ExecutionEnvironment.getExecutionEnvironment();
@@ -41,8 +43,7 @@ public class ETL {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd:HH:mm:ss:SSS");
                     ErrorTime = simpleDateFormat.format(new Date());
                     System.out.println("主算子处理"+ErrorPoint+"过程中出现异常交由备份算子处理");
-                    //Thread.sleep(30201);
-                    //发送故障信号
+                    //模拟主算子接受不到该数据,发送故障信号
                     return "error "+s;
                 } else {
                     return s.toString();
@@ -61,9 +62,7 @@ public class ETL {
                         //CacheManager.clearOnly(words[0]);
                         // 让备份算子处理5号元组
                         String zifuchuan = s.split(" ")[1];
-                        CacheManager.putCache(zifuchuan, new Cache(zifuchuan));
-                        process(ErrorPoint);
-
+                        process(zifuchuan);
                         SimpleDateFormat okTime = new SimpleDateFormat("YYYY-MM-dd:HH:mm:ss:SSS");
                         correctTime = okTime.format(new Date());
                         System.out.println("备份算子处理故障点：Tuple ID" + zifuchuan + "故障发生时间为：" + ErrorTime + "故障解决时间为" + correctTime + " ");
@@ -83,19 +82,19 @@ public class ETL {
     }
     //备份算子处理过程
     public static void  process(String target) throws Exception {
-        String inputPath = "src/main/resources/hello.txt";
-        Cache cacheInfo = CacheManager.getCacheInfo(target);
-        String key = cacheInfo.getKey();
-        ExecutionEnvironment environment = ExecutionEnvironment.getExecutionEnvironment();
-        DataSource<String> stringDataSource = environment.readTextFile(inputPath);
-        FlatMapOperator<String, String> stringStringFlatMapOperator = stringDataSource.flatMap(new FlatMapFunction<String, String>() {
-            @Override
-            public void flatMap(String s, Collector<String> collector) throws Exception {
-                if (s.split(" ")[0].equals(key)) {
-                    collector.collect(s + " mark");
+        if (!CacheManager.isContainKey(target)) {
+            CacheManager.putCache(target,new Cache(target));
+            ExecutionEnvironment environment = ExecutionEnvironment.getExecutionEnvironment();
+            DataSource<String> stringDataSource = environment.readTextFile(inputPath);
+            FlatMapOperator<String, String> stringStringFlatMapOperator = stringDataSource.flatMap(new FlatMapFunction<String, String>() {
+                @Override
+                public void flatMap(String s, Collector<String> collector) throws Exception {
+                    if (s.split(" ")[0].equals(target)) {
+                        collector.collect(s + " mark");
+                    }
                 }
-            }
-        });
-        stringStringFlatMapOperator.print();
+            });
+            stringStringFlatMapOperator.print();
+        }
     }
 }
