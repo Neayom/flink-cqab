@@ -24,9 +24,9 @@ public class ETL {
     public static void main(String[] args) throws Exception {
 
         ParameterTool parameterTool = ParameterTool.fromArgs(args);
-       /* inputPath = parameterTool.get("inputPath");
-        ErrorPoint = parameterTool.get("ErrorPoint");*/
-       inputPath = "src/main/resources/hello.txt";
+        inputPath = parameterTool.get("inputPath");
+        /*ErrorPoint = parameterTool.get("ErrorPoint");*/
+       //inputPath = "src/main/resources/hello.txt";
        ErrorPoint = "9";
 
         // create execution env

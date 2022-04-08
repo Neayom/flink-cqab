@@ -9,5 +9,8 @@
         <module name="flink-demo" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="flink-demo" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
