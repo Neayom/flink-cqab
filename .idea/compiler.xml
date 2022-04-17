@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="flink-cqab" />
         <module name="flink-demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="flink-cqab" target="1.8" />
       <module name="flink-demo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
