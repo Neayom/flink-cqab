@@ -6,7 +6,7 @@ package com.dlnu;
 public class user {
     @Override
     public String toString() {
-        return "user{}";
+        return "user1{}";
     }
 
     public user() {
