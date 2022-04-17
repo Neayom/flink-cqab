@@ -8,4 +8,7 @@ public class user {
     public String toString() {
         return "user{}";
     }
+
+    public user() {
+    }
 }
