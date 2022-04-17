@@ -11,4 +11,9 @@ public class user {
 
     public user() {
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
