@@ -16,4 +16,10 @@ public class user {
     protected void finalize() throws Throwable {
         super.finalize();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        System.out.println("zhangsan");
+        return super.equals(obj);
+    }
 }
