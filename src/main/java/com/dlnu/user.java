@@ -11,4 +11,9 @@ public class user {
 
     public user() {
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 }
