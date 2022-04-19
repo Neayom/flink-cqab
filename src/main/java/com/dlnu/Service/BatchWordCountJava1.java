@@ -69,8 +69,8 @@ public class BatchWordCountJava1 {
             public void flatMap(String value, Collector<String> out) throws Exception {
                 String[] tokens = value.split(" ");
                 //out.collect(value+"mark");
-                for (String token: tokens) {
-                    if (token.equals("error")) {
+
+                    if (tokens[0].equals("error")) {
                         SimpleDateFormat ErrTime = new SimpleDateFormat("YYYY-MM-dd:HH:mm:ss:SSS");
                         ErrorTime = ErrTime.format(new Date());
                         String Point = CacheManager.getCacheInfo("error").getKey();
@@ -128,7 +128,7 @@ public class BatchWordCountJava1 {
                         out.collect(value+" mark");
                     }
                 }
-            }
+
         });
         //counts.print();
         result.writeAsText(outPath, FileSystem.WriteMode.OVERWRITE).setParallelism(1);
